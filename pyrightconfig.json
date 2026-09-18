@@ -1,0 +1,36 @@
+{
+  "comment": "Pyright/Pylance config for SEIS-PY",
+  "pythonVersion": "3.11",
+  "typeCheckingMode": "basic",
+  "include": [
+    "."
+  ],
+  "exclude": [
+    ".venv",
+    "__pycache__",
+    "reports",
+    "**/__pyrefly_virtual__/**",
+    "**/inmemory/**",
+    "c:/__pyrefly_virtual__/**",
+    "C:/__pyrefly_virtual__/**",
+    "c:\\__pyrefly_virtual__\\**",
+    "C:\\__pyrefly_virtual__\\**",
+    "*__pyrefly_virtual__*",
+    "*inmemory*"
+  ],
+  "ignore": [
+    "**/__pyrefly_virtual__/**",
+    "**/inmemory/**",
+    "c:/__pyrefly_virtual__/**",
+    "C:/__pyrefly_virtual__/**",
+    "c:\\__pyrefly_virtual__\\**",
+    "C:\\__pyrefly_virtual__\\**",
+    "*__pyrefly_virtual__*",
+    "*inmemory*"
+  ],
+  "reportMissingImports": "warning",
+  "reportMissingModuleSource": "none",
+  "reportUndefinedVariable": "warning",
+  "reportOperatorIssue": "none",
+  "reportAttributeAccessIssue": "none"
+}

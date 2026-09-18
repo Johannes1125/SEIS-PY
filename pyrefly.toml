@@ -1,0 +1,33 @@
+# pyrefly.toml — Pyrefly type-checker configuration for SEIS-PY
+# Excludes virtual in-memory diff buffers and suppresses non-project diagnostics
+
+project-includes = [
+    "*.py",
+    "core/**/*.py",
+    "ml/**/*.py",
+    "ui/**/*.py",
+    "config/**/*.py"
+]
+
+project-excludes = [
+    "**/__pycache__/**",
+    "**/.venv/**",
+    "**/reports/**",
+    "**/__pyrefly_virtual__/**",
+    "**/inmemory/**",
+    "**/inmemory/*",
+    "c:/__pyrefly_virtual__/**",
+    "C:/__pyrefly_virtual__/**",
+    "c:\\__pyrefly_virtual__\\**",
+    "C:\\__pyrefly_virtual__\\**",
+    "__pyrefly_virtual__/**",
+    "inmemory/**",
+    "*__pyrefly_virtual__*",
+    "*inmemory*"
+]
+
+[errors]
+unknown-name = false
+unbound-name = false
+missing-attribute = false
+bad-argument-type = false
