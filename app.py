@@ -164,14 +164,13 @@ with st.sidebar:
             )
 
     with st.expander("**2. Building Geometry (1–4 Stories)**", expanded=True):
-        _g1, _g2, _g3 = st.columns(3)
+        _g1, _g2 = st.columns(2)
         with _g1:
             # Strictly 1 to 4 stories per Scope (Line 35) & Delimitations (Line 38)
             stories = st.slider("Stories", min_value=1, max_value=4, value=2, step=1, help="Thesis delimited to 1 to 4 stories.")
         with _g2:
             story_height = st.slider("Height (m)", min_value=2.8, max_value=4.2, value=3.0, step=0.1)
-        with _g3:
-            plan_area = st.slider("Area (m²)", min_value=40.0, max_value=350.0, value=120.0, step=10.0)
+        plan_area = st.slider("Total Floor Plan Area (m²)", min_value=40.0, max_value=350.0, value=120.0, step=10.0)
 
         plan_shape = "REGULAR"
 
@@ -287,109 +286,78 @@ is_compliant = physics_res["drift_compliance"]
 max_idr = physics_res["max_idr_pct"]
 drift_limit = physics_res["drift_limit_pct"]
 
-banner_col1, banner_col2 = st.columns([3, 2])
+# Responsive Top Reference Threshold & Base Shear Evaluation Grid
+compliance_badge = "✅" if is_compliant else "⚠️"
+compliance_class = "compliance-pass" if is_compliant else "compliance-fail"
+compliance_title = "NSCP 2015 DRIFT REFERENCE: WITHIN ALLOWABLE THRESHOLD" if is_compliant else "NSCP 2015 DRIFT REFERENCE: EXCEEDS REFERENCE THRESHOLD"
+compliance_text = (
+    f"Maximum Inter-Story Drift IDR = <b>{max_idr:.3f}%</b> is within code allowable threshold (<b>≤ {drift_limit:.1f}%</b> per Sec. 208.5.9)."
+    if is_compliant
+    else f"Maximum Inter-Story Drift IDR = <b>{max_idr:.3f}%</b> exceeds code reference threshold (<b>{drift_limit:.1f}%</b>). Additional lateral stiffness required."
+)
 
-with banner_col1:
-    if is_compliant:
-        st.markdown(f"""
-        <div class="compliance-pass">
-            <span style="font-size: 1.4rem;">✅</span>
-            <div>
-                <strong style="font-size: 1.05rem;">NSCP 2015 DRIFT REFERENCE: WITHIN ALLOWABLE THRESHOLD</strong><br/>
-                <span style="font-size: 0.85rem; font-weight: 400;">
-                    Maximum Inter-Story Drift IDR = <b>{max_idr:.3f}%</b> is within code allowable threshold (<b>≤ {drift_limit:.1f}%</b> per Sec. 208.5.9).
-                </span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown(f"""
-        <div class="compliance-fail">
-            <span style="font-size: 1.4rem;">⚠️</span>
-            <div>
-                <strong style="font-size: 1.05rem;">NSCP 2015 DRIFT REFERENCE: EXCEEDS REFERENCE THRESHOLD</strong><br/>
-                <span style="font-size: 0.85rem; font-weight: 400;">
-                    Maximum Inter-Story Drift IDR = <b>{max_idr:.3f}%</b> exceeds code reference threshold (<b>{drift_limit:.1f}%</b>). Additional lateral stiffness required.
-                </span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-with banner_col2:
-    st.markdown(f"""
-    <div class="stat-box">
+st.markdown(f"""
+<div class="banner-grid">
+    <div class="{compliance_class}">
+        <span style="font-size: 1.4rem; flex-shrink: 0;">{compliance_badge}</span>
         <div>
+            <strong style="font-size: 0.95rem; line-height: 1.25; display: block; margin-bottom: 0.2rem;">{compliance_title}</strong>
+            <span style="font-size: 0.82rem; font-weight: 400; line-height: 1.35; color: rgba(255,255,255,0.85);">
+                {compliance_text}
+            </span>
+        </div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-item">
             <div class="stat-box-label">Design Base Shear Ratio</div>
             <div class="stat-box-value" style="color: #00AAF9;">Cs = {physics_res['base_shear_coeff']:.3f} W</div>
         </div>
-        <div style="width:1px; height:36px; background:rgba(255,255,255,0.12);"></div>
-        <div style="text-align: right;">
+        <div class="stat-box-divider"></div>
+        <div class="stat-box-item" style="text-align: right;">
             <div class="stat-box-label">Peak Floor Acceleration</div>
-            <div class="stat-box-value" style="color: #FFBA42;">{physics_res['peak_accel_g']:.3f} g ({physics_res['peak_accel_mps2']:.2f} m/s²)</div>
+            <div class="stat-box-value" style="color: #FFBA42;">
+                {physics_res['peak_accel_g']:.3f} g <span style="font-size: 0.8rem; font-weight: 600; color: #8BD8FD;">({physics_res['peak_accel_mps2']:.2f} m/s²)</span>
+            </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
-st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
-
-# High-Level Metric Cards Grid: Exactly displaying the 5 SOP Question #3 Response Parameters
-m_col1, m_col2, m_col3, m_col4, m_col5, m_col6 = st.columns(6)
-
-with m_col1:
-    st.markdown(f"""
+# High-Level Metric Cards Grid: Responsive CSS Grid (1 to 6 columns based on screen width)
+st.markdown(f"""
+<div class="metrics-grid">
     <div class="metric-card">
         <div class="metric-label">1. Fund. Period (T₁)</div>
         <div class="metric-value">{physics_res['fundamental_period_s']:.3f}<span class="metric-unit">s</span></div>
         <div class="metric-sub">Method A / Rayleigh</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with m_col2:
-    st.markdown(f"""
     <div class="metric-card">
         <div class="metric-label">2. Design Base Shear</div>
         <div class="metric-value">{physics_res['base_shear_kn']:.1f}<span class="metric-unit">kN</span></div>
         <div class="metric-sub">Cs = {physics_res['base_shear_coeff']:.3f} W</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with m_col3:
-    st.markdown(f"""
     <div class="metric-card">
         <div class="metric-label">3. Peak Roof Defl. (Δ)</div>
         <div class="metric-value">{physics_res['peak_roof_disp_mm']:.1f}<span class="metric-unit">mm</span></div>
         <div class="metric-sub">Inelastic Δm = 0.70 R Δs</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with m_col4:
-    st.markdown(f"""
     <div class="metric-card">
         <div class="metric-label">4. Max Drift Ratio (IDR)</div>
         <div class="metric-value">{physics_res['max_idr_pct']:.2f}<span class="metric-unit">%</span></div>
         <div class="metric-sub" style="color: {'#10b981' if is_compliant else '#ef4444'};">Threshold: ≤ {drift_limit:.1f}%</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with m_col5:
-    st.markdown(f"""
     <div class="metric-card">
         <div class="metric-label">5. Peak Acceleration</div>
         <div class="metric-value">{physics_res['peak_accel_g']:.3f}<span class="metric-unit">g</span></div>
         <div class="metric-sub">{physics_res['peak_accel_mps2']:.2f} m/s²</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with m_col6:
-    st.markdown(f"""
     <div class="metric-card">
         <div class="metric-label">Total Seismic Weight</div>
         <div class="metric-value">{physics_res['total_weight_kn']:.1f}<span class="metric-unit">kN</span></div>
         <div class="metric-sub">~{physics_res['total_weight_kn']/9.81:.1f} tons</div>
     </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("<div style='height: 18px;'></div>", unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
 # ==============================================================================
 # 6. SHARED STRUCTURAL ARRAYS (used across multiple tabs)

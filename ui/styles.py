@@ -147,14 +147,66 @@ def apply_custom_css():
         /* ============================================================
            METRIC CARDS — #013C58 bg, #00537A border accent
            ============================================================ */
+        /* ============================================================
+           BANNER GRID & STAT BOX (Responsive Top Banner)
+           ============================================================ */
+        .banner-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 1rem;
+            align-items: stretch;
+            margin-bottom: 0.85rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        @media (max-width: 1100px) {
+            .banner-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================================
+           METRICS GRID & CARDS — Responsive 6 / 3 / 2 / 1 columns
+           ============================================================ */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 0.35rem;
+            margin-bottom: 1.2rem;
+        }
+        @media (max-width: 1380px) {
+            .metrics-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.6rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .metric-card {
             background: var(--bg-card);
             border: 1px solid var(--border-accent);
             border-radius: var(--radius);
-            padding: 0.9rem 1.1rem;
+            padding: 0.85rem 1rem;
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 0;
         }
         .metric-card::before {
             content: '';
@@ -173,19 +225,27 @@ def apply_custom_css():
             background: linear-gradient(90deg, var(--accent-amber) 0%, var(--accent-gold) 100%);
         }
         .metric-label {
-            font-size: 0.65rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.09em;
-            color: var(--text-muted); margin-bottom: 0.25rem;
+            font-size: 0.68rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            color: var(--text-muted); margin-bottom: 0.35rem;
+            line-height: 1.25;
+            word-break: normal;
         }
         .metric-value {
             font-family: 'Outfit', sans-serif;
-            font-size: 1.5rem; font-weight: 800; color: var(--text-primary); line-height: 1.1;
+            font-size: clamp(1.2rem, 1.55vw, 1.55rem);
+            font-weight: 800; color: var(--text-primary); line-height: 1.15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .metric-unit {
-            font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-left: 0.15rem;
+            font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-left: 0.2rem;
         }
         .metric-sub {
-            font-size: 0.68rem; margin-top: 0.25rem; font-weight: 600; color: var(--accent-bright);
+            font-size: 0.7rem; margin-top: 0.35rem; font-weight: 600; color: var(--accent-bright);
+            line-height: 1.3;
+            word-break: break-word;
         }
 
         /* ============================================================
@@ -196,16 +256,20 @@ def apply_custom_css():
             border: 1px solid rgba(16,185,129,0.3);
             border-left: 4px solid var(--success);
             color: var(--text-primary);
-            padding: 0.8rem 1.3rem; border-radius: var(--radius);
-            font-weight: 600; display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.85rem 1.2rem; border-radius: var(--radius);
+            font-weight: 600; display: flex; align-items: center; gap: 0.75rem;
+            box-sizing: border-box;
+            min-height: 100%;
         }
         .compliance-fail {
             background: var(--danger-bg);
             border: 1px solid rgba(239,68,68,0.3);
             border-left: 4px solid var(--danger);
             color: var(--text-primary);
-            padding: 0.8rem 1.3rem; border-radius: var(--radius);
-            font-weight: 600; display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.85rem 1.2rem; border-radius: var(--radius);
+            font-weight: 600; display: flex; align-items: center; gap: 0.75rem;
+            box-sizing: border-box;
+            min-height: 100%;
         }
 
         /* ============================================================
@@ -217,13 +281,31 @@ def apply_custom_css():
             border-radius: var(--radius);
             padding: 0.85rem 1.2rem; display: flex; align-items: center;
             justify-content: space-between;
+            gap: 0.75rem;
+            box-sizing: border-box;
+            min-height: 100%;
+        }
+        .stat-box-item {
+            flex: 1;
+            min-width: 0;
+        }
+        .stat-box-divider {
+            width: 1px;
+            height: 38px;
+            background: rgba(255,255,255,0.12);
+            flex-shrink: 0;
         }
         .stat-box-label {
             font-size: 0.65rem; text-transform: uppercase; font-weight: 700;
-            letter-spacing: 0.09em; color: var(--text-muted);
+            letter-spacing: 0.08em; color: var(--text-muted);
+            margin-bottom: 0.2rem;
+            white-space: nowrap;
         }
         .stat-box-value {
-            font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+            font-weight: 800;
+            white-space: nowrap;
         }
 
         /* ============================================================
@@ -251,9 +333,9 @@ def apply_custom_css():
             padding-bottom: 2rem !important;
         }
         [data-testid="stSidebarHeader"] {
-            padding-top: 0.4rem !important;
+            padding-top: 0.1rem !important;
             padding-bottom: 0rem !important;
-            min-height: auto !important;
+            min-height: 0.5rem !important;
         }
         [data-testid="stSidebar"] h3:first-child,
         [data-testid="stSidebar"] h3:first-of-type,
@@ -394,9 +476,65 @@ def apply_custom_css():
             font-size: 0.85rem; color: var(--text-muted);
             line-height: 1.55; margin: 0;
         }
-        .dark-card hr {
-            border: none; border-top: 1px solid rgba(0,170,249,0.1);
-            margin: 0.7rem 0;
+        /* ============================================================
+           RESPONSIVE MEDIA QUERIES & STREAMLIT OVERRIDES
+           ============================================================ */
+        @media (max-width: 992px) {
+            .main [data-testid="stHorizontalBlock"] {
+                flex-wrap: wrap !important;
+                gap: 1.25rem !important;
+            }
+            .main [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+                flex: 1 1 100% !important;
+                min-width: 100% !important;
+                width: 100% !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main .block-container {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+                padding-top: 0.75rem !important;
+            }
+            .seispy-header {
+                padding: 1rem 1.1rem !important;
+            }
+            .seispy-logo-row {
+                flex-wrap: wrap !important;
+                gap: 0.6rem !important;
+            }
+            .seispy-badge {
+                font-size: 1.25rem !important;
+                padding: 0.15rem 0.6rem !important;
+            }
+            .seispy-version {
+                margin-left: 0 !important;
+            }
+            .seispy-title-text {
+                font-size: 0.95rem !important;
+            }
+            .stat-box {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.6rem !important;
+            }
+            .stat-box-divider {
+                display: none !important;
+            }
+            .stat-box-item {
+                width: 100% !important;
+                text-align: left !important;
+            }
+        }
+
+        /* Responsive Plotly & DataFrames */
+        .js-plotly-plot, .plot-container {
+            max-width: 100% !important;
+        }
+        [data-testid="stDataFrame"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
         }
 
     </style>
